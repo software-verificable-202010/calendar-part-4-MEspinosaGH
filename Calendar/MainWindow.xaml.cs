@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -20,71 +24,177 @@ namespace Calendar
     /// </summary>
     public partial class MainWindow : Window
     {
-
-        int month = DateTime.Now.Month;
-        int year = DateTime.Now.Year;
+        int month;
+        int year;
         string[] months = new string[] { "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre" };
+        const int positionUnit = 1;
+        const int firstDayOfMonth = 1;
+        const int sundayFirstPosition = 0;
+        const int sundayLastPosition = 7;
+        const int firstMonth = 1;
+        const int lastMonth = 12;
+        const int hour = 0;
+        const int minute = 1;
+        EventsList calendar;
+        EventsList monthEvents;
+        List<ItemsControl> eventsList;
 
-        TextBlock[] daysOfMonth; 
+        TextBlock[] daysOfMonth;
 
-        public MainWindow()
+        void ReadSerialFile()
         {
-            void SetDaysOfMonth()
+            if (File.Exists("Events.txt"))
             {
-                TextBlockMonth.Text = months[month - 1];
-                TextBlockYear.Text = year.ToString();
+                IFormatter formatter = new BinaryFormatter();
+                Stream stream = new FileStream("Events.txt", FileMode.Open, FileAccess.Read);
+                calendar = (EventsList)formatter.Deserialize(stream);
+            }
+        }
 
-                DateTime firstDayDate = new DateTime(year, month, 1);
-
-                int firstWeekDay = (int)firstDayDate.DayOfWeek;
-
-                int lastDay = DateTime.DaysInMonth(year, month);
-
-                int day = 1;
-
-                for (int i = 0; i< daysOfMonth.Length; i++) 
+        void GetMonthEvents()
+        {
+            if (calendar != null)
+            {
+                monthEvents = new EventsList();
+                foreach (Event appointment in calendar.events)
                 {
-                    if (i < firstWeekDay - 1 || day > lastDay)
+                    if (appointment.date.Year == year && appointment.date.Month == month)
                     {
-                        daysOfMonth[i].Text = "";
-                    }
-                    else
-                    {
-                        daysOfMonth[i].Text = day.ToString();
-                        day++;
+                        monthEvents.events.Add(appointment);
                     }
                 }
-
             }
+        }
 
-            void LastMonthBtn_Click(Object sender, EventArgs e)
+        void ClearEvents()
+        {
+            foreach (ItemsControl itemsControl in eventsList)
             {
-                month--;
-                if (month < 1)
-                {
-                    year--;
-                    month = 12;
-                }
-
-                SetDaysOfMonth();
+                itemsControl.Items.Clear();
             }
+            eventsList.Clear();
+        }
 
-            void NextMonthBtn_Click(Object sender, EventArgs e)
+        void SetEventsText(Event appointment, int day, ItemsControl itemsControlEvents)
+        {
+            if (appointment.date.Day == day)
             {
-                month++;
-                if (month > 12)
-                {
-                    year++;
-                    month = 1;
-                }
+                TextBlock textBlockEvent = new TextBlock();
+                string start = appointment.start[hour].ToString() + ":" + appointment.start[minute].ToString();
+                string end = appointment.end[hour].ToString() + ":" + appointment.end[minute].ToString();
+                string name = appointment.name;
+                textBlockEvent.Text = name + "(" + start + " - " + end + ")";
+                itemsControlEvents.Items.Add(textBlockEvent);
+            }
+        }
 
-                SetDaysOfMonth();
+        void SetDayEvents(int day, int dayIndex)
+        {
+            if (monthEvents != null)
+            {
+                // ItemsControlEvents: Controller to list for TextBlock events
+                ItemsControl itemsControlEvents = new ItemsControl();
+                eventsList.Add(itemsControlEvents);
+                gridMonth.Children.Add(itemsControlEvents);
+                Grid.SetColumn(itemsControlEvents, Grid.GetColumn(daysOfMonth[dayIndex]));
+                Grid.SetRow(itemsControlEvents, Grid.GetRow(daysOfMonth[dayIndex]));
+                itemsControlEvents.HorizontalAlignment = HorizontalAlignment.Left;
+                itemsControlEvents.VerticalAlignment = VerticalAlignment.Bottom;
+                itemsControlEvents.Margin = new Thickness(5, 5, 5, 5);
+                foreach (Event appointment in monthEvents.events)
+                {
+                    SetEventsText(appointment, day, itemsControlEvents);
+                }
             }
 
+        }
+
+        void SetDaysOfMonth()
+        {
+            if (month.Equals(null) || year.Equals(null))
+            {
+                month = DateTime.Now.Month;
+                year = DateTime.Now.Year;
+            }
+
+            ClearEvents();
+            GetMonthEvents();
+            
+            textBlockMonth.Text = months[month - positionUnit];
+            textBlockYear.Text = year.ToString();
+
+            DateTime firstDayOfMonthDate = new DateTime(year, month, firstDayOfMonth);
+
+            int firstWeekDay = (int)firstDayOfMonthDate.DayOfWeek;
+            if (firstWeekDay == sundayFirstPosition) { firstWeekDay = sundayLastPosition; }
+
+            int lastDay = DateTime.DaysInMonth(year, month);
+            int day = firstDayOfMonth;
+
+            for (int dayIndex = 0; dayIndex < daysOfMonth.Length; dayIndex++)
+            {
+                if (dayIndex < firstWeekDay - positionUnit || day > lastDay)
+                {
+                    daysOfMonth[dayIndex].Text = "";
+                }
+                else
+                {
+                    daysOfMonth[dayIndex].Text = day.ToString();
+                    SetDayEvents(day, dayIndex);
+                    day++;
+                }
+            }
+        }
+
+        void LastMonthBtn_Click(Object sender, EventArgs e)
+        {
+            month--;
+            if (month < firstMonth)
+            {
+                year--;
+                month = lastMonth;
+            }
+
+            SetDaysOfMonth();
+        }
+
+        void NextMonthBtn_Click(Object sender, EventArgs e)
+        {
+            month++;
+            if (month > lastMonth)
+            {
+                year++;
+                month = firstMonth;
+            }
+
+            SetDaysOfMonth();
+        }
+
+        void WeeklyViewBtn_Click(Object sender, EventArgs e)
+        {
+            Week weekWindow = new Week(month, year);
+            weekWindow.Show();
+            this.Close();
+        }
+
+        void NewEventBtn_Click(Object sender, EventArgs e)
+        {
+            NewEvent newEvent = new NewEvent();
+            newEvent.ShowDialog();
+            ReadSerialFile();
+            SetDaysOfMonth();
+        }
+
+        public MainWindow(int passed_month, int passed_year)
+        {
+            ReadSerialFile();
             InitializeComponent();
-
-            ButtonLastMonth.Click += new RoutedEventHandler(LastMonthBtn_Click);
-            ButtonNextMonth.Click += new RoutedEventHandler(NextMonthBtn_Click);
+            year = passed_year;
+            month = passed_month;
+            buttonLastMonth.Click += new RoutedEventHandler(LastMonthBtn_Click);
+            buttonNextMonth.Click += new RoutedEventHandler(NextMonthBtn_Click);
+            buttonWeeklyView.Click += new RoutedEventHandler(WeeklyViewBtn_Click);
+            buttonNewEvent.Click += new RoutedEventHandler(NewEventBtn_Click);
 
             daysOfMonth = new TextBlock[] {this.TextBlockDay1, this.TextBlockDay2, this.TextBlockDay3, this.TextBlockDay4, this.TextBlockDay5, this.TextBlockDay6, this.TextBlockDay7,
                     this.TextBlockDay8, this.TextBlockDay9, this.TextBlockDay10, this.TextBlockDay11, this.TextBlockDay12, this.TextBlockDay13, this.TextBlockDay14,
@@ -93,10 +203,7 @@ namespace Calendar
                     this.TextBlockDay29, this.TextBlockDay30, this.TextBlockDay31, this.TextBlockDay32, this.TextBlockDay33, this.TextBlockDay34, this.TextBlockDay35,
                     this.TextBlockDay36, this.TextBlockDay37, this.TextBlockDay38, this.TextBlockDay39, this.TextBlockDay40, this.TextBlockDay41, this.TextBlockDay42};
 
-
-            var currentYear = DateTime.Now.Year.ToString();
-            var currentMonth = DateTime.Now.ToString("MMMM");
-;
+            eventsList = new List<ItemsControl>();
 
             SetDaysOfMonth();
         }

@@ -13,3 +13,7 @@ C:\Users\macae\source\repos\Calendar\Calendar\obj\Debug\Calendar.csproj.Generate
 C:\Users\macae\source\repos\Calendar\Calendar\obj\Debug\Calendar.csproj.CoreCompileInputs.cache
 C:\Users\macae\source\repos\Calendar\Calendar\obj\Debug\Calendar.exe
 C:\Users\macae\source\repos\Calendar\Calendar\obj\Debug\Calendar.pdb
+C:\Users\macae\source\repos\Calendar\Calendar\obj\Debug\Week.g.cs
+C:\Users\macae\source\repos\Calendar\Calendar\obj\Debug\Week.baml
+C:\Users\macae\source\repos\Calendar\Calendar\obj\Debug\NewEvent.g.cs
+C:\Users\macae\source\repos\Calendar\Calendar\obj\Debug\NewEvent.baml
