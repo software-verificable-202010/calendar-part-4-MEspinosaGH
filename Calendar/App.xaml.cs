@@ -14,12 +14,10 @@ namespace Calendar
     /// </summary>
     public partial class App : Application
     {
-        void startApp(Object sender, EventArgs e)
+        void StartApp(Object sender, EventArgs e)
         {
-            int month = DateTime.Now.Month;
-            int year = DateTime.Now.Year;
-            MainWindow window = new MainWindow(month, year);
-            window.Show();
+            Login login = new Login();
+            login.Show();
         }
     }
 }

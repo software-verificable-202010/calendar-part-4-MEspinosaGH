@@ -20,104 +20,129 @@ namespace Calendar
 {
     public partial class Week : Window
     {
-        int month;
-        int year;
-        int day;
-        const int positionUnit = 1;
-        const int firstDayOfMonth = 1;
-        const int sundayFirstPosition = 0;
-        const int sundayLastPosition = 7;
-        const int january = 1;
-        const int december = 12;
-        const int oneMonth = 1;
-        const int oneDay = 1;
-        const int hourIndex = 0;
-        const int minuteIndex = 1;
-        const int weekLength = 7;
-        const int twoWeeks = 14;
-        const int oneHour = 1;
-        const int minuteZero = 0;
-        EventsList calendar;
-        List<ItemsControl> eventsList;
-        TextBlock[] daysOfWeekTextBlocks;
-        string[] months = new string[] { "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre" };
-        string[] daysOfWeek = new string[] { "Lunes ", "Martes ", "Miércoles ", "Jueves ", "Viernes ", "Sábado ", "Domingo " };
+        #region Constants
+        private const int positionUnit = 1;
+        private const int firstDayOfMonth = 1;
+        private const int sundayFirstPosition = 0;
+        private const int sundayLastPosition = 7;
+        private const int january = 1;
+        private const int december = 12;
+        private const int oneMonth = 1;
+        private const int oneDay = 1;
+        private const int hourIndex = 0;
+        private const int minuteIndex = 1;
+        private const int weekLength = 7;
+        private const int twoWeeks = 14;
+        private const int oneHour = 1;
+        private const int minuteZero = 0;
+        Utils util = new Utils();
+        private string[] months = new string[] { "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre" };
+        private string[] daysOfWeek = new string[] { "Lunes ", "Martes ", "Miércoles ", "Jueves ", "Viernes ", "Sábado ", "Domingo " };
+        #endregion
 
-        void GetDayEvents(int year, int month, int day, int weekDay)
+        #region Fields
+        private EventsList calendar;
+        private int month;
+        private int year;
+        private int day;
+        private List<ItemsControl> itemControlListEvents;
+        private TextBlock[] daysOfWeekTextBlocks;
+        private User user;
+        #endregion
+
+        #region Methods
+        private void GetDayEvents(int year, int month, int day, int weekDay)
         {
             if (calendar != null)
             {
                 EventsList dayEvents = new EventsList();
-                foreach (Event appoinment in calendar.events)
+                foreach (Event appointment in calendar.Events)
                 {
-                    int appointmentYear = appoinment.date.Year;
-                    int appointmentMonth = appoinment.date.Month;
-                    int appointmentDay = appoinment.date.Day;
+                    int appointmentYear = appointment.Date.Year;
+                    int appointmentMonth = appointment.Date.Month;
+                    int appointmentDay = appointment.Date.Day;
 
-                    if (year == appointmentYear && month == appointmentMonth && day == appointmentDay)
+                    bool appoinmentIsOnActualDay = day == appointmentDay && month == appointmentMonth && year == appointmentYear;
+                    bool isThisUserAppointment = appointment.Owner.Name == user.Name;
+                    if (appointment.Participants != null)
                     {
-                        dayEvents.events.Add(appoinment);
+                        foreach (User participant in appointment.Participants.Users)
+                        {
+                            Console.WriteLine(participant.Name);
+                            if (participant.Name == user.Name)
+                            {
+                                isThisUserAppointment = true;
+                            }
+                        }
+                    }
+                    if (appoinmentIsOnActualDay && isThisUserAppointment)
+                    {
+                        dayEvents.Events.Add(appointment);
                     }
                 }
-
                 SetDayEvents(dayEvents, weekDay + positionUnit);
             }
         }
 
-        void SetDayEvents(EventsList events, int weekDay)
+        private void SetDayEvents(EventsList events, int weekDay)
         {
             for (int hour = 0; hour < 24; hour++)
             {
                 ItemsControl itemsControlEvents = new ItemsControl();
-                eventsList.Add(itemsControlEvents);
+                itemControlListEvents.Add(itemsControlEvents);
                 GridHours.Children.Add(itemsControlEvents);
                 Grid.SetColumn(itemsControlEvents, weekDay);
                 Grid.SetRow(itemsControlEvents, hour + positionUnit);
 
-                foreach (Event appointment in events.events)
+                foreach (Event appointment in events.Events)
                 {
-                    int startHour = int.Parse(appointment.start[hourIndex]);
-                    int startMinute = int.Parse(appointment.start[minuteIndex]);
-                    int endHour = int.Parse(appointment.end[hourIndex]);
-                    int endMinute = int.Parse(appointment.end[minuteIndex]);
+                    int startHour = int.Parse(appointment.Start[hourIndex]);
+                    int startMinute = int.Parse(appointment.Start[minuteIndex]);
+                    int endHour = int.Parse(appointment.End[hourIndex]);
+                    int endMinute = int.Parse(appointment.End[minuteIndex]);
                     TextBlock textBlockEvent = new TextBlock();
-                    if (startHour == hour)
+                    bool isStartHour = startHour == hour;
+                    bool isEndHour = endHour == hour && endMinute > minuteZero;
+                    bool isLastHour = endHour == hour + oneHour && endMinute == minuteZero;
+                    bool isMiddleHour = startHour < hour && endHour > hour;
+                    if (isStartHour)
                     {
-                        textBlockEvent.Text = appointment.name + " - Desde " + appointment.start[hourIndex] + ":" + appointment.start[minuteIndex];
+                        textBlockEvent.Text = String.Format("{0} - Desde {1}:{2}", appointment.Name, appointment.Start[hourIndex], appointment.Start[minuteIndex]);
                         itemsControlEvents.Items.Add(textBlockEvent);
                     }
-                    else if (endHour == hour && endMinute > minuteZero)
+                    else if (isEndHour)
                     {
-                        textBlockEvent.Text = appointment.name + " - Hasta " + appointment.end[hourIndex] + ":" + appointment.end[minuteIndex];
+                        textBlockEvent.Text = String.Format("{0} - Hasta {1}:{2}", appointment.Name, appointment.End[hourIndex], appointment.End[minuteIndex]);
                         itemsControlEvents.Items.Add(textBlockEvent);
                     }
-                    else if (endHour == hour + oneHour && endMinute == minuteZero)
+                    else if (isLastHour)
                     {
-                        textBlockEvent.Text = appointment.name + " - Hasta " + appointment.end[hourIndex] + ":" + appointment.end[minuteIndex];
+                        textBlockEvent.Text = String.Format("{0} - Hasta {1}:{2}", appointment.Name, appointment.End[hourIndex], appointment.End[minuteIndex]);
                         itemsControlEvents.Items.Add(textBlockEvent);
                     }
-                    else if (startHour < hour && endHour > hour)
+                    else if (isMiddleHour)
                     {
-                        textBlockEvent.Text = appointment.name;
+                        textBlockEvent.Text = appointment.Name;
                         itemsControlEvents.Items.Add(textBlockEvent);
                     }
                 }
             }
         }
 
-        void ClearEvents()
+        private void ClearEvents()
         {
-            foreach (ItemsControl itemsControl in eventsList) { itemsControl.Items.Clear(); }
-            eventsList.Clear();
+            foreach (ItemsControl itemsControl in itemControlListEvents) { itemsControl.Items.Clear(); }
+            itemControlListEvents.Clear();
         }
 
-        void SetCalendarDays(int firstWeekdayOfMonth, int lastDayOfLastMonth, int lastMonthYear, int lastMonth)
+        private void SetCalendarDays(int firstWeekdayOfMonth, int lastDayOfLastMonth, int lastMonthYear, int lastMonth)
         {
             for (int weekDay = 0; weekDay < daysOfWeekTextBlocks.Length; weekDay++)
             {
-                if (firstWeekdayOfMonth <= weekDay + positionUnit)
+                bool isThisMonth = firstWeekdayOfMonth <= weekDay + positionUnit;
+                if (isThisMonth)
                 {
-                    daysOfWeekTextBlocks[weekDay].Text = daysOfWeek[weekDay] + day.ToString();
+                    daysOfWeekTextBlocks[weekDay].Text = String.Format("{0} {1}", daysOfWeek[weekDay], day);
 
                     GetDayEvents(year, month, day, weekDay);
 
@@ -126,14 +151,14 @@ namespace Calendar
                 else
                 {
                     int lastMonthDay = lastDayOfLastMonth - (firstWeekdayOfMonth - oneDay) + weekDay + positionUnit;
-                    daysOfWeekTextBlocks[weekDay].Text = daysOfWeek[weekDay] + lastMonthDay.ToString();
+                    daysOfWeekTextBlocks[weekDay].Text = String.Format("{0}{1}", daysOfWeek[weekDay], lastMonthDay);
 
                     GetDayEvents(lastMonthYear, lastMonth, lastMonthDay, weekDay);
                 }
             }
         }
 
-        void SetFirstWeek()
+        private void SetFirstWeek()
         {
             ClearEvents();
 
@@ -141,7 +166,8 @@ namespace Calendar
 
             int lastMonth = month - oneMonth;
             int lastMonthYear = year;
-            if (lastMonth < january)
+            bool isLastYear = lastMonth < january;
+            if (isLastYear)
             {
                 lastMonth = december;
                 lastMonthYear--;
@@ -149,23 +175,30 @@ namespace Calendar
             int lastDayOfLastMonth = DateTime.DaysInMonth(lastMonthYear, lastMonth);
 
             int firstWeekdayOfMonth = (int)firstDayDate.DayOfWeek;
-            if (firstWeekdayOfMonth == sundayFirstPosition) { firstWeekdayOfMonth = sundayLastPosition; }
+
+            bool startsOnSunday = firstWeekdayOfMonth == sundayFirstPosition;
+            if (startsOnSunday)
+            {
+                firstWeekdayOfMonth = sundayLastPosition;
+            }
 
             day = firstDayOfMonth;
 
             SetCalendarDays(firstWeekdayOfMonth, lastDayOfLastMonth, lastMonthYear, lastMonth);
 
-            if (lastMonthYear != year)
+            bool hasDifferentYears = lastMonthYear != year;
+            bool hasDifferentMonths = firstWeekdayOfMonth > 1;
+            if (hasDifferentYears)
             {
-                TextBlockYear.Text = lastMonthYear.ToString() + " / " + year.ToString();
+                TextBlockYear.Text = String.Format("{0} / {1}", lastMonthYear, year);
             }
             else
             {
                 TextBlockYear.Text = year.ToString();
             }
-            if (firstWeekdayOfMonth > 1)
+            if (hasDifferentMonths)
             {
-                TextBlockMonth.Text = months[lastMonth - positionUnit] + " / " + months[month - positionUnit];
+                TextBlockMonth.Text = String.Format("{0} / {1}", months[lastMonth - positionUnit], months[month - positionUnit]);
             }
             else
             {
@@ -173,27 +206,30 @@ namespace Calendar
             }
         }
 
-        // set Month and Year when user clicks Next
-        void SetNextWeekMonthAndYear(bool changeOfMonth)
+        private void SetNextWeekMonthAndYear(bool changeOfMonth)
         {
             if (changeOfMonth)
             {
                 int nextMonth = month + oneMonth;
                 int nextMonthYear = year;
-                if (nextMonth > december)
+
+                bool hasToChangeYear = nextMonth > december;
+                bool isNextMonth = day >= weekLength;
+                bool isNextYear = year != nextMonthYear;
+                if (hasToChangeYear)
                 {
                     nextMonth = january;
                     nextMonthYear++;
                 }
-                TextBlockMonth.Text = months[month - positionUnit] + " / " + months[nextMonth - positionUnit];
-                if (day >= weekLength)
+                TextBlockMonth.Text = String.Format("{0} / {1}", months[month - positionUnit], months[nextMonth - positionUnit]);
+                if (isNextMonth)
                 {
                     TextBlockMonth.Text = months[nextMonth - positionUnit];
                 }
-                if (year != nextMonthYear)
+                if (isNextYear)
                 {
-                    TextBlockYear.Text = year.ToString() + " / " + nextMonthYear.ToString();
-                    if (day >= weekLength)
+                    TextBlockYear.Text = String.Format("{0} / {1}", year.ToString(), nextMonthYear.ToString());
+                    if (isNextMonth)
                     {
                         TextBlockYear.Text = nextMonthYear.ToString();
                     }
@@ -212,14 +248,15 @@ namespace Calendar
             }
         }
 
-        void SetNextWeek_Click(Object sender, EventArgs e)
+        private void SetNextWeek_Click(Object sender, EventArgs e)
         {
             ClearEvents();
             int lastDayOfMonth = DateTime.DaysInMonth(year, month);
             bool changeOfMonth = false;
             for (int weekDay = 0; weekDay < weekLength; weekDay++)
             {
-                if (day > lastDayOfMonth)
+                bool monthEnded = day > lastDayOfMonth;
+                if (monthEnded)
                 {
                     day = firstDayOfMonth;
                     changeOfMonth = true;
@@ -229,17 +266,17 @@ namespace Calendar
                 {
                     GetDayEvents(year, month, day, weekDay);
                 }
-                daysOfWeekTextBlocks[weekDay].Text = daysOfWeek[weekDay] + day.ToString();
+                daysOfWeekTextBlocks[weekDay].Text = String.Format("{0}{1}", daysOfWeek[weekDay], day);
                 day++;
             }
             SetNextWeekMonthAndYear(changeOfMonth);
         }
 
-        // set last week of last month
-        void SetLastMonth()
+        private void SetLastMonth()
         {
             month--;
-            if (month < january)
+            bool isLastYear = month < january;
+            if (isLastYear)
             {
                 month = december;
                 year--;
@@ -248,18 +285,15 @@ namespace Calendar
             day = lastDayOfMonth + (day - twoWeeks);
             for (int weekDay = 0; weekDay < weekLength; weekDay++)
             {
-                daysOfWeekTextBlocks[weekDay].Text = daysOfWeek[weekDay] + day.ToString();
-
+                daysOfWeekTextBlocks[weekDay].Text = String.Format("{0}{1}", daysOfWeek[weekDay], day);
                 GetDayEvents(year, month, day, weekDay);
-
                 day++;
             }
             TextBlockMonth.Text = months[month - positionUnit];
             TextBlockYear.Text = year.ToString();
         }
 
-        // set last week
-        void SetLastWeek()
+        private void SetLastWeek()
         {
             day = day - twoWeeks;
             for (int weekDay = 0; weekDay < weekLength; weekDay++)
@@ -272,14 +306,16 @@ namespace Calendar
             TextBlockYear.Text = year.ToString();
         }
 
-        void SetLastWeek_Click(Object sender, EventArgs e)
+        private void SetLastWeek_Click(Object sender, EventArgs e)
         {
             ClearEvents();
-            if (day <= weekLength + oneDay)
+            bool isLastMonth = day <= weekLength + oneDay;
+            bool isFirstWeek = day > weekLength + oneDay && day <= twoWeeks;
+            if (isLastMonth)
             {
                 SetLastMonth();
             }
-            else if (day > weekLength + oneDay && day <= twoWeeks)
+            else if (isFirstWeek)
             {
                 SetFirstWeek();
             }
@@ -290,38 +326,40 @@ namespace Calendar
            
         }
 
-        void MonthlyViewBtn_Click(Object sender, EventArgs e)
+        private void MonthlyViewBtn_Click(Object sender, EventArgs e)
         {
-            MainWindow monthlyView = new MainWindow(month, year);
+            MainWindow monthlyView = new MainWindow(month, year, user);
             monthlyView.Show();
             this.Close();
         }
 
-        void ReadSerialFile()
+        private void NewEventBtn_Click(Object sender, EventArgs e)
         {
-            if (File.Exists("Events.txt"))
-            {
-                IFormatter formatter = new BinaryFormatter();
-                Stream stream = new FileStream("Events.txt", FileMode.Open, FileAccess.Read);
-                calendar = (EventsList)formatter.Deserialize(stream);
-            }
-        }
-
-        void NewEventBtn_Click(Object sender, EventArgs e)
-        {
-            NewEvent newEvent = new NewEvent();
+            NewEvent newEvent = new NewEvent(user);
             newEvent.ShowDialog();
-            ReadSerialFile();
-            Week newWeekView = new Week(month, year);
+            calendar = util.ReadEventsSerialFile();
+            Week newWeekView = new Week(month, year, user);
             newWeekView.Show();
             this.Close();
         }
 
-        public Week(int passed_month, int passed_year)
+        private void buttonEvents_Click(object sender, RoutedEventArgs e)
         {
-            month = passed_month;
-            year = passed_year;
-            ReadSerialFile();
+            MyEvents myEvents = new MyEvents(user);
+            myEvents.ShowDialog();
+            calendar = util.ReadEventsSerialFile();
+            Week newWeekView = new Week(month, year, user);
+            newWeekView.Show();
+            this.Close();
+        }
+
+        public Week(int passedMonth, int passedYear, User passedUser)
+        {
+            month = passedMonth;
+            year = passedYear;
+            user = passedUser;
+
+            calendar = util.ReadEventsSerialFile();
 
             InitializeComponent();
 
@@ -330,9 +368,11 @@ namespace Calendar
             ButtonNextWeek.Click += new RoutedEventHandler(SetNextWeek_Click);
             ButtonLastWeek.Click += new RoutedEventHandler(SetLastWeek_Click);
             ButtonNewEvent.Click += new RoutedEventHandler(NewEventBtn_Click);
+            textBlockUserName.Text = string.Format("Hola, {0}", user.Name);
 
-            eventsList = new List<ItemsControl>();
+            itemControlListEvents = new List<ItemsControl>();
             SetFirstWeek();
         }
+        #endregion
     }
 }

@@ -1,0 +1,205 @@
+﻿<Window x:Class="Calendar.MyEvents"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Calendar"
+        mc:Ignorable="d"
+        Title="MyEvents" Height="334.223" Width="566.262">
+    <Grid>
+        <ListBox x:Name="listBoxEvents" HorizontalAlignment="Left" Margin="10,10,0,10" Width="227.092" SelectionChanged="listBoxEvents_SelectionChanged">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <TextBlock Text="{Binding Name}"/>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <TextBox x:Name="TextBoxName" Height="31.8" Margin="254.66,32.937,0,0" TextWrapping="Wrap" Text="Nombre Evento" VerticalAlignment="Top" AutomationProperties.IsRequiredForForm="True" AutomationProperties.HelpText="Nombre Evento" HorizontalAlignment="Left" Width="276.156"/>
+        <DatePicker x:Name="DatePickerEventDate" Height="28.8" Margin="254.66,69.737,0,0" VerticalAlignment="Top" AutomationProperties.IsRequiredForForm="True" DisplayDate="2020-05-06" HorizontalAlignment="Left" Width="276.156"/>
+        <ComboBox x:Name="ComboBoxStartTimeHour" Margin="254.66,125.137,0,0" HorizontalAlignment="Left" Width="49.2" AutomationProperties.HelpText="Hora de Inicio" AutomationProperties.IsRequiredForForm="True" AutomationProperties.Name="Hora Inicio" Height="28.8" VerticalAlignment="Top">
+            <ComboBoxItem Content="00" IsSelected="True"/>
+            <ComboBoxItem Content="01"/>
+            <ComboBoxItem Content="02"/>
+            <ComboBoxItem Content="03"/>
+            <ComboBoxItem Content="04"/>
+            <ComboBoxItem Content="05"/>
+            <ComboBoxItem Content="06"/>
+            <ComboBoxItem Content="07"/>
+            <ComboBoxItem Content="08"/>
+            <ComboBoxItem Content="09"/>
+            <ComboBoxItem Content="10"/>
+            <ComboBoxItem Content="11"/>
+            <ComboBoxItem Content="12"/>
+            <ComboBoxItem Content="13"/>
+            <ComboBoxItem Content="14"/>
+            <ComboBoxItem Content="15"/>
+            <ComboBoxItem Content="16"/>
+            <ComboBoxItem Content="17"/>
+            <ComboBoxItem Content="18"/>
+            <ComboBoxItem Content="19"/>
+            <ComboBoxItem Content="20"/>
+            <ComboBoxItem Content="21"/>
+            <ComboBoxItem Content="22"/>
+            <ComboBoxItem Content="23"/>
+        </ComboBox>
+        <ComboBox x:Name="ComboBoxStartTimeMinute" Margin="308.86,125.137,0,0" HorizontalAlignment="Left" Width="49.2" AutomationProperties.HelpText="Hora de Inicio" AutomationProperties.IsRequiredForForm="True" AutomationProperties.Name="Hora Inicio" Height="28.8" VerticalAlignment="Top">
+            <ComboBoxItem Content="00" IsSelected="True"/>
+            <ComboBoxItem Content="01"/>
+            <ComboBoxItem Content="02"/>
+            <ComboBoxItem Content="03"/>
+            <ComboBoxItem Content="04"/>
+            <ComboBoxItem Content="05"/>
+            <ComboBoxItem Content="06"/>
+            <ComboBoxItem Content="07"/>
+            <ComboBoxItem Content="08"/>
+            <ComboBoxItem Content="09"/>
+            <ComboBoxItem Content="10"/>
+            <ComboBoxItem Content="11"/>
+            <ComboBoxItem Content="12"/>
+            <ComboBoxItem Content="13"/>
+            <ComboBoxItem Content="14"/>
+            <ComboBoxItem Content="15"/>
+            <ComboBoxItem Content="16"/>
+            <ComboBoxItem Content="17"/>
+            <ComboBoxItem Content="18"/>
+            <ComboBoxItem Content="19"/>
+            <ComboBoxItem Content="20"/>
+            <ComboBoxItem Content="21"/>
+            <ComboBoxItem Content="22"/>
+            <ComboBoxItem Content="23"/>
+            <ComboBoxItem Content="24"/>
+            <ComboBoxItem Content="25"/>
+            <ComboBoxItem Content="26"/>
+            <ComboBoxItem Content="27"/>
+            <ComboBoxItem Content="28"/>
+            <ComboBoxItem Content="29"/>
+            <ComboBoxItem Content="30"/>
+            <ComboBoxItem Content="31"/>
+            <ComboBoxItem Content="32"/>
+            <ComboBoxItem Content="33"/>
+            <ComboBoxItem Content="34"/>
+            <ComboBoxItem Content="35"/>
+            <ComboBoxItem Content="36"/>
+            <ComboBoxItem Content="37"/>
+            <ComboBoxItem Content="38"/>
+            <ComboBoxItem Content="39"/>
+            <ComboBoxItem Content="40"/>
+            <ComboBoxItem Content="41"/>
+            <ComboBoxItem Content="42"/>
+            <ComboBoxItem Content="43"/>
+            <ComboBoxItem Content="44"/>
+            <ComboBoxItem Content="45"/>
+            <ComboBoxItem Content="46"/>
+            <ComboBoxItem Content="47"/>
+            <ComboBoxItem Content="48"/>
+            <ComboBoxItem Content="49"/>
+            <ComboBoxItem Content="50"/>
+            <ComboBoxItem Content="51"/>
+            <ComboBoxItem Content="52"/>
+            <ComboBoxItem Content="53"/>
+            <ComboBoxItem Content="54"/>
+            <ComboBoxItem Content="55"/>
+            <ComboBoxItem Content="56"/>
+            <ComboBoxItem Content="57"/>
+            <ComboBoxItem Content="58"/>
+            <ComboBoxItem Content="59"/>
+        </ComboBox>
+        <ComboBox x:Name="ComboBoxFinishTimeHour" Margin="400.816,125.137,0,0" HorizontalAlignment="Left" Width="49.2" AutomationProperties.HelpText="Hora de Inicio" AutomationProperties.IsRequiredForForm="True" AutomationProperties.Name="Hora Inicio" Height="28.8" VerticalAlignment="Top">
+            <ComboBoxItem Content="00" IsSelected="True"/>
+            <ComboBoxItem Content="01"/>
+            <ComboBoxItem Content="02"/>
+            <ComboBoxItem Content="03"/>
+            <ComboBoxItem Content="04"/>
+            <ComboBoxItem Content="05"/>
+            <ComboBoxItem Content="06"/>
+            <ComboBoxItem Content="07"/>
+            <ComboBoxItem Content="08"/>
+            <ComboBoxItem Content="09"/>
+            <ComboBoxItem Content="10"/>
+            <ComboBoxItem Content="11"/>
+            <ComboBoxItem Content="12"/>
+            <ComboBoxItem Content="13"/>
+            <ComboBoxItem Content="14"/>
+            <ComboBoxItem Content="15"/>
+            <ComboBoxItem Content="16"/>
+            <ComboBoxItem Content="17"/>
+            <ComboBoxItem Content="18"/>
+            <ComboBoxItem Content="19"/>
+            <ComboBoxItem Content="20"/>
+            <ComboBoxItem Content="21"/>
+            <ComboBoxItem Content="22"/>
+            <ComboBoxItem Content="23"/>
+        </ComboBox>
+        <ComboBox x:Name="ComboBoxFinishTimeMinute" Margin="455.016,125.137,0,0" HorizontalAlignment="Left" Width="49.2" AutomationProperties.HelpText="Hora de Inicio" AutomationProperties.IsRequiredForForm="True" AutomationProperties.Name="Hora Inicio" Height="28.8" VerticalAlignment="Top">
+            <ComboBoxItem Content="00" IsSelected="True"/>
+            <ComboBoxItem Content="01"/>
+            <ComboBoxItem Content="02"/>
+            <ComboBoxItem Content="03"/>
+            <ComboBoxItem Content="04"/>
+            <ComboBoxItem Content="05"/>
+            <ComboBoxItem Content="06"/>
+            <ComboBoxItem Content="07"/>
+            <ComboBoxItem Content="08"/>
+            <ComboBoxItem Content="09"/>
+            <ComboBoxItem Content="10"/>
+            <ComboBoxItem Content="11"/>
+            <ComboBoxItem Content="12"/>
+            <ComboBoxItem Content="13"/>
+            <ComboBoxItem Content="14"/>
+            <ComboBoxItem Content="15"/>
+            <ComboBoxItem Content="16"/>
+            <ComboBoxItem Content="17"/>
+            <ComboBoxItem Content="18"/>
+            <ComboBoxItem Content="19"/>
+            <ComboBoxItem Content="20"/>
+            <ComboBoxItem Content="21"/>
+            <ComboBoxItem Content="22"/>
+            <ComboBoxItem Content="23"/>
+            <ComboBoxItem Content="24"/>
+            <ComboBoxItem Content="25"/>
+            <ComboBoxItem Content="26"/>
+            <ComboBoxItem Content="27"/>
+            <ComboBoxItem Content="28"/>
+            <ComboBoxItem Content="29"/>
+            <ComboBoxItem Content="30"/>
+            <ComboBoxItem Content="31"/>
+            <ComboBoxItem Content="32"/>
+            <ComboBoxItem Content="33"/>
+            <ComboBoxItem Content="34"/>
+            <ComboBoxItem Content="35"/>
+            <ComboBoxItem Content="36"/>
+            <ComboBoxItem Content="37"/>
+            <ComboBoxItem Content="38"/>
+            <ComboBoxItem Content="39"/>
+            <ComboBoxItem Content="40"/>
+            <ComboBoxItem Content="41"/>
+            <ComboBoxItem Content="42"/>
+            <ComboBoxItem Content="43"/>
+            <ComboBoxItem Content="44"/>
+            <ComboBoxItem Content="45"/>
+            <ComboBoxItem Content="46"/>
+            <ComboBoxItem Content="47"/>
+            <ComboBoxItem Content="48"/>
+            <ComboBoxItem Content="49"/>
+            <ComboBoxItem Content="50"/>
+            <ComboBoxItem Content="51"/>
+            <ComboBoxItem Content="52"/>
+            <ComboBoxItem Content="53"/>
+            <ComboBoxItem Content="54"/>
+            <ComboBoxItem Content="55"/>
+            <ComboBoxItem Content="56"/>
+            <ComboBoxItem Content="57"/>
+            <ComboBoxItem Content="58"/>
+            <ComboBoxItem Content="59"/>
+        </ComboBox>
+        <TextBox x:Name="TextBoxDescription" Margin="255.66,161.537,0,0" TextWrapping="Wrap" Text="Descripción" Height="62.4" VerticalAlignment="Top" HorizontalAlignment="Left" Width="275.156"/>
+        <Button x:Name="ButtonSave" Content="Guardar" Height="27.8" Margin="0,0,29.046,28.901" VerticalAlignment="Bottom" Background="#FF6E98A2" BorderBrush="#FF6E98A2" HorizontalAlignment="Right" Width="100" Click="ButtonSave_Click"/>
+        <Button x:Name="ButtonCancel" Content="Cancelar" Height="27.8" Margin="255.66,0,240.802,28.901" VerticalAlignment="Bottom" Background="White" BorderBrush="#FF6E98A2" IsCancel="True"/>
+        <TextBlock Margin="256.66,103.537,174.202,0" TextWrapping="Wrap" Text="Hora Inicio" Height="21.6" VerticalAlignment="Top"/>
+        <TextBlock Margin="0,103.537,29.046,0" TextWrapping="Wrap" Height="21.6" VerticalAlignment="Top" HorizontalAlignment="Right" Width="129"><Run Text="Hora "/><Run Text="Término"/></TextBlock>
+        <Button x:Name="ButtonDelete" Content="Eliminar" Height="27.8" Margin="0,0,134.046,28.901" VerticalAlignment="Bottom" Background="#FFEB6161" BorderBrush="#FF6E98A2" HorizontalAlignment="Right" Width="100" Click="ButtonDelete_Click"/>
+
+    </Grid>
+</Window>

@@ -17,3 +17,7 @@ C:\Users\macae\source\repos\Calendar\Calendar\obj\Debug\Week.g.cs
 C:\Users\macae\source\repos\Calendar\Calendar\obj\Debug\Week.baml
 C:\Users\macae\source\repos\Calendar\Calendar\obj\Debug\NewEvent.g.cs
 C:\Users\macae\source\repos\Calendar\Calendar\obj\Debug\NewEvent.baml
+C:\Users\macae\source\repos\Calendar\Calendar\obj\Debug\Login.g.cs
+C:\Users\macae\source\repos\Calendar\Calendar\obj\Debug\Login.baml
+C:\Users\macae\source\repos\Calendar\Calendar\obj\Debug\MyEvents.g.cs
+C:\Users\macae\source\repos\Calendar\Calendar\obj\Debug\MyEvents.baml

@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "KtSZoYBD/hAKaa4vt5E2DcNrewBMJPQ73diBkwbL54Evj2u9jlCtWRbCQuZEsvq18ZRKXWFvC6Hn04Ex5lOj7w==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\macae\\source\\repos\\Calendar\\Calendar.Tests\\Calendar.Tests.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\macae\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
+    "C:\\Users\\macae\\.nuget\\packages\\netstandard.library\\2.0.3\\netstandard.library.2.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}
