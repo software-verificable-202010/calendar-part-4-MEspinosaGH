@@ -33,6 +33,7 @@ namespace Calendar
         private EventsList myEvents = new EventsList();
         private User user;
         private Event selectedEvent;
+        private UsersList allUsers;
         #endregion
 
         #region Methods
@@ -102,6 +103,11 @@ namespace Calendar
             string[] end = { endHour, endMinute };
             eventToEdit.Start = start;
             eventToEdit.End = end;
+            eventToEdit.Participants.Users.Clear();
+            foreach (User item in listBoxAllUsers.SelectedItems)
+            {
+                eventToEdit.Participants.Users.Add(item);
+            }
             CloseWindow();
         }
 
@@ -110,9 +116,11 @@ namespace Calendar
             InitializeComponent();
             ButtonDelete.IsEnabled = false;
             calendar = util.ReadEventsSerialFile();
+            allUsers = util.ReadUsersSerialFile();
             user = passedUser;
             FilterCalendar();
             AddEventsToListBox();
+            listBoxAllUsers.ItemsSource = allUsers.Users;
         }
         #endregion
     }

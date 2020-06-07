@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Calendar"
         mc:Ignorable="d"
-        Title="MyEvents" Height="334.223" Width="566.262">
+        Title="MyEvents" Height="334.223" Width="723.862">
     <Grid>
         <ListBox x:Name="listBoxEvents" HorizontalAlignment="Left" Margin="10,10,0,10" Width="227.092" SelectionChanged="listBoxEvents_SelectionChanged">
             <ListBox.ItemTemplate>
@@ -195,11 +195,20 @@
             <ComboBoxItem Content="59"/>
         </ComboBox>
         <TextBox x:Name="TextBoxDescription" Margin="255.66,161.537,0,0" TextWrapping="Wrap" Text="Descripción" Height="62.4" VerticalAlignment="Top" HorizontalAlignment="Left" Width="275.156"/>
-        <Button x:Name="ButtonSave" Content="Guardar" Height="27.8" Margin="0,0,29.046,28.901" VerticalAlignment="Bottom" Background="#FF6E98A2" BorderBrush="#FF6E98A2" HorizontalAlignment="Right" Width="100" Click="ButtonSave_Click"/>
-        <Button x:Name="ButtonCancel" Content="Cancelar" Height="27.8" Margin="255.66,0,240.802,28.901" VerticalAlignment="Bottom" Background="White" BorderBrush="#FF6E98A2" IsCancel="True"/>
+        <Button x:Name="ButtonSave" Content="Guardar" Height="27.8" Margin="430.816,0,0,28.901" VerticalAlignment="Bottom" Background="#FF6E98A2" BorderBrush="#FF6E98A2" HorizontalAlignment="Left" Width="100" Click="ButtonSave_Click"/>
+        <Button x:Name="ButtonCancel" Content="Cancelar" Height="27.8" Margin="255.66,0,0,28.901" VerticalAlignment="Bottom" Background="White" BorderBrush="#FF6E98A2" IsCancel="True" HorizontalAlignment="Left" Width="63.4"/>
         <TextBlock Margin="256.66,103.537,174.202,0" TextWrapping="Wrap" Text="Hora Inicio" Height="21.6" VerticalAlignment="Top"/>
-        <TextBlock Margin="0,103.537,29.046,0" TextWrapping="Wrap" Height="21.6" VerticalAlignment="Top" HorizontalAlignment="Right" Width="129"><Run Text="Hora "/><Run Text="Término"/></TextBlock>
-        <Button x:Name="ButtonDelete" Content="Eliminar" Height="27.8" Margin="0,0,134.046,28.901" VerticalAlignment="Bottom" Background="#FFEB6161" BorderBrush="#FF6E98A2" HorizontalAlignment="Right" Width="100" Click="ButtonDelete_Click"/>
+        <TextBlock Margin="401.816,103.537,0,0" TextWrapping="Wrap" Height="21.6" VerticalAlignment="Top" HorizontalAlignment="Left" Width="129"><Run Text="Hora "/><Run Text="Término"/></TextBlock>
+        <Button x:Name="ButtonDelete" Content="Eliminar" Height="27.8" Margin="325.816,0,0,28.901" VerticalAlignment="Bottom" Background="#FFEB6161" BorderBrush="#FF6E98A2" HorizontalAlignment="Left" Width="100" Click="ButtonDelete_Click"/>
+        <ListBox x:Name="listBoxAllUsers" Margin="547.4,32.937,0,80.686" HorizontalAlignment="Left" Width="152" SelectionMode="Multiple">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <TextBlock Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
 
     </Grid>
 </Window>

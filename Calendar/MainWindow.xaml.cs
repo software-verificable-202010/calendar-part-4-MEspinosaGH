@@ -61,7 +61,6 @@ namespace Calendar
                     {
                         foreach (User participant in appointment.Participants.Users)
                         {
-                            Console.WriteLine(participant.Name);
                             if (participant.Name == user.Name)
                             {
                                 isThisUserAppointment = true;
