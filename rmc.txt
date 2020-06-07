@@ -1,0 +1,2 @@
+timeWarning = "Pon una hora de término mayor a la de inicio";
+userWarning = "Uno de los usuarios está ocupado a esa hora";

@@ -193,7 +193,6 @@
         <Button x:Name="ButtonCancel" Content="Cancelar" HorizontalAlignment="Left" Height="27" Margin="11,0,0,24.8" VerticalAlignment="Bottom" Width="129" Background="White" BorderBrush="#FF6E98A2" IsCancel="True"/>
         <TextBlock HorizontalAlignment="Left" Margin="11,81,0,0" TextWrapping="Wrap" Text="Hora Inicio" Width="129" Height="22" VerticalAlignment="Top"/>
         <TextBlock HorizontalAlignment="Left" Margin="156,81,0,0" TextWrapping="Wrap" Width="129" Height="22" VerticalAlignment="Top"><Run Text="Hora "/><Run Text="Término"/></TextBlock>
-        <TextBlock x:Name="TextBlockWarning" Height="18" Margin="11,0,9.6,56.8" TextWrapping="Wrap" Text="Pon una hora de término mayor a la de inicio" VerticalAlignment="Bottom" Background="#FFDD4242" Foreground="White" Visibility="Collapsed"/>
         <ListBox x:Name="listBoxAllUsers" Margin="313,10,0,84.2" HorizontalAlignment="Left" Width="152" SelectionMode="Multiple">
             <ListBox.ItemTemplate>
                 <DataTemplate>

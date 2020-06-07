@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -25,7 +26,6 @@ namespace Calendar
     public partial class MainWindow : Window
     {
         #region Constants
-        private string[] months = new string[] { "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre" };
         private const int positionUnit = 1;
         private const int firstDayOfMonth = 1;
         private const int sundayFirstPosition = 0;
@@ -34,10 +34,11 @@ namespace Calendar
         private const int lastMonth = 12;
         private const int hour = 0;
         private const int minute = 1;
-        private Utils util = new Utils();
+        private const string defaultUserName = "User";
         #endregion
 
         #region Fields
+        private string[] months = new string[] { "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre" };
         private int month;
         private int year;
         private User user;
@@ -45,6 +46,7 @@ namespace Calendar
         private EventsList monthEvents;
         private List<ItemsControl> listItemsControlEvents;
         private TextBlock[] textBlocksDaysOfMonth;
+        private Utils util = new Utils();
         #endregion
 
         #region Methods
@@ -89,10 +91,10 @@ namespace Calendar
             if (appointment.Date.Day == day)
             {
                 TextBlock textBlockEvent = new TextBlock();
-                string start = String.Format(format: "{0}:{1}", arg0: appointment.Start[hour], arg1: appointment.Start[minute]);
-                string end = String.Format("{0}:{1}", appointment.End[hour], appointment.End[minute]);
+                string start = String.Format(CultureInfo.InvariantCulture, format: "{0}:{1}", arg0: appointment.Start[hour], arg1: appointment.Start[minute]);
+                string end = String.Format(CultureInfo.InvariantCulture, "{0}:{1}", appointment.End[hour], appointment.End[minute]);
                 string name = appointment.Name;
-                textBlockEvent.Text = String.Format("{0}({1} - {2})", name, start, end);   
+                textBlockEvent.Text = String.Format(CultureInfo.InvariantCulture, "{0}({1} - {2})", name, start, end);   
                 itemsControlEvents.Items.Add(textBlockEvent);
             }
         }
@@ -129,7 +131,7 @@ namespace Calendar
             GetMonthEvents();
             
             textBlockMonth.Text = months[month - positionUnit];
-            textBlockYear.Text = year.ToString();
+            textBlockYear.Text = year.ToString(CultureInfo.InvariantCulture);
 
             DateTime firstDayOfMonthDate = new DateTime(year, month, firstDayOfMonth);
 
@@ -152,7 +154,7 @@ namespace Calendar
                 }
                 else
                 {
-                    textBlocksDaysOfMonth[dayIndex].Text = day.ToString();
+                    textBlocksDaysOfMonth[dayIndex].Text = day.ToString(CultureInfo.InvariantCulture);
                     SetDayEvents(day, dayIndex);
                     day++;
                 }
@@ -198,7 +200,7 @@ namespace Calendar
             SetDaysOfMonth();
         }
 
-        public void MyEventsBtn_Click(Object sender, EventArgs e)
+        private void buttonEvents_Click(object sender, RoutedEventArgs e)
         {
             MyEvents myEvents = new MyEvents(user);
             myEvents.ShowDialog();
@@ -212,14 +214,17 @@ namespace Calendar
             InitializeComponent();
             year = passedYear;
             month = passedMonth;
+            if (passedUser== null)
+            {
+                passedUser = new User(defaultUserName);
+            }
             user = passedUser;
             buttonLastMonth.Click += new RoutedEventHandler(LastMonthBtn_Click);
             buttonNextMonth.Click += new RoutedEventHandler(NextMonthBtn_Click);
             buttonWeeklyView.Click += new RoutedEventHandler(WeeklyViewBtn_Click);
             buttonNewEvent.Click += new RoutedEventHandler(NewEventBtn_Click);
-            buttonEvents.Click += new RoutedEventHandler(MyEventsBtn_Click);
             
-            textBlockUserName.Text = string.Format("Hola, {0}", user.Name);
+            textBlockUserName.Text = string.Format(CultureInfo.InvariantCulture, "Hola, {0}", user.Name);
 
             textBlocksDaysOfMonth = new TextBlock[] {this.TextBlockDay1, this.TextBlockDay2, this.TextBlockDay3, this.TextBlockDay4, this.TextBlockDay5, this.TextBlockDay6, this.TextBlockDay7,
                     this.TextBlockDay8, this.TextBlockDay9, this.TextBlockDay10, this.TextBlockDay11, this.TextBlockDay12, this.TextBlockDay13, this.TextBlockDay14,

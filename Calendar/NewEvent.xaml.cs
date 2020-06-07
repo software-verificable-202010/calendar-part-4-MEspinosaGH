@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -47,10 +48,10 @@ namespace Calendar
         private bool DatesCollide(Event oldEvent, DateTime newEventDate, string[] newEventStart, string[] newEventEnd)
         {
             bool areDifferentDates = oldEvent.Date != newEventDate;
-            int oldEventStartTime = Int32.Parse(oldEvent.Start[hourIndex]) + Int32.Parse(oldEvent.Start[minuteIndex]) * minutesInAnHour;
-            int oldEventEndTIme = Int32.Parse(oldEvent.End[hourIndex]) + Int32.Parse(oldEvent.End[minuteIndex]) * minutesInAnHour;
-            int newEventStartTime = Int32.Parse(newEventStart[hourIndex]) + Int32.Parse(newEventStart[minuteIndex]) * minutesInAnHour;
-            int newEventEndTime = Int32.Parse(newEventEnd[hourIndex]) + Int32.Parse(newEventEnd[minuteIndex]) * minutesInAnHour;
+            int oldEventStartTime = Int32.Parse(oldEvent.Start[hourIndex], NumberFormatInfo.InvariantInfo) + Int32.Parse(oldEvent.Start[minuteIndex], NumberFormatInfo.InvariantInfo) * minutesInAnHour;
+            int oldEventEndTIme = Int32.Parse(oldEvent.End[hourIndex], NumberFormatInfo.InvariantInfo) + Int32.Parse(oldEvent.End[minuteIndex], NumberFormatInfo.InvariantInfo) * minutesInAnHour;
+            int newEventStartTime = Int32.Parse(newEventStart[hourIndex], NumberFormatInfo.InvariantInfo) + Int32.Parse(newEventStart[minuteIndex], NumberFormatInfo.InvariantInfo) * minutesInAnHour;
+            int newEventEndTime = Int32.Parse(newEventEnd[hourIndex], NumberFormatInfo.InvariantInfo) + Int32.Parse(newEventEnd[minuteIndex], NumberFormatInfo.InvariantInfo) * minutesInAnHour;
             bool areAtDifferentHours = oldEventStartTime >= newEventEndTime || newEventStartTime >= oldEventEndTIme;
             if (areDifferentDates || areAtDifferentHours)
             {
@@ -117,20 +118,20 @@ namespace Calendar
             string[] start = { startHour, startMinute };
             string[] end = { endHour, endMinute };
 
-            bool isNotValid = int.Parse(endHour) < int.Parse(startHour) || (int.Parse(startHour) == int.Parse(endHour) && int.Parse(endMinute) <= int.Parse(startMinute));
+            bool isNotValid = int.Parse(endHour,
+                NumberFormatInfo.InvariantInfo) < int.Parse(startHour, NumberFormatInfo.InvariantInfo) || 
+                (int.Parse(startHour, NumberFormatInfo.InvariantInfo) == int.Parse(endHour, NumberFormatInfo.InvariantInfo) 
+                && int.Parse(endMinute, NumberFormatInfo.InvariantInfo) <= int.Parse(startMinute, NumberFormatInfo.InvariantInfo));
             if (isNotValid)
             {
-                TextBlockWarning.Text = timeWarning;
-                TextBlockWarning.Visibility = Visibility.Visible;
+                MessageBox.Show(timeWarning);
             }
             else if (UsersAreAvailable(date, start, end) == false)
             {
-                TextBlockWarning.Text = userWarning;
-                TextBlockWarning.Visibility = Visibility.Visible;
+                MessageBox.Show(userWarning);
             }
             else
             {
-                TextBlockWarning.Visibility = Visibility.Collapsed;
                 Event newEvent = new Event(name, description, date, start, end, user, selectedUsers);
                 calendar.Events.Add(newEvent);
                 IFormatter formatter = new BinaryFormatter();
