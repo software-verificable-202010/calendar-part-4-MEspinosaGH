@@ -21,7 +21,7 @@ namespace Calendar.Tests
         [Test]
         public void Test_Has_Same_Name_When_True()
         {
-            Assert.IsTrue(user.hasSameNameAs("usuario"));
+            Assert.IsTrue(user.HasSameNameAs("usuario"));
         }
 
         [Test]
@@ -32,7 +32,7 @@ namespace Calendar.Tests
             participants = new UsersList();
             appointment = new Appointment("evento", "descripcion", DateTime.Today, start, end, user, participants);
 
-            Assert.IsTrue(user.participatesInEvent(appointment));
+            Assert.IsTrue(user.ParticipatesInEvent(appointment));
         }
 
         [Test]
@@ -45,7 +45,7 @@ namespace Calendar.Tests
             participants.AddUser(user);
             appointment = new Appointment("evento", "descripcion", DateTime.Today, start, end, user2, participants);
 
-            Assert.IsTrue(user.participatesInEvent(appointment));
+            Assert.IsTrue(user.ParticipatesInEvent(appointment));
         }
         #endregion
     }

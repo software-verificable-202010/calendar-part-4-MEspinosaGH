@@ -116,7 +116,7 @@ namespace Calendar
             }
             foreach (Appointment appointment in calendar.Appointments)
             {
-                if (appointment.isThisMonth(month, year) && user.participatesInEvent(appointment))
+                if (appointment.IsThisMonth(month, year) && user.ParticipatesInEvent(appointment))
                 {
                     monthEvents.AddAppointment(appointment);
                 }
@@ -139,7 +139,7 @@ namespace Calendar
             
             foreach (Appointment appointment in calendar.Appointments)
             {
-                if (appointment.isThisDay(day, month, year) && user.participatesInEvent(appointment))
+                if (appointment.IsThisDay(day, month, year) && user.ParticipatesInEvent(appointment))
                 {
                     dayEvents.AddAppointment(appointment);
                 }

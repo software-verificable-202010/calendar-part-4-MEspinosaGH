@@ -36,7 +36,7 @@ namespace Calendar
             Users.Clear();
         }
 
-        public bool areAvailable(DateTime date, string[] start, string[] end, AppointmentsList calendar)
+        public bool AreAvailable(DateTime date, string[] start, string[] end, AppointmentsList calendar)
         {
             if (calendar == null)
             {
@@ -48,7 +48,7 @@ namespace Calendar
                 {
                     foreach (User selectedUser in users)
                     {
-                        if (appointment.Owner.hasSameNameAs(selectedUser.Name))
+                        if (appointment.Owner.HasSameNameAs(selectedUser.Name))
                         {
                             return false;
                         }
@@ -56,7 +56,7 @@ namespace Calendar
                         {
                             foreach (User participant in appointment.Participants.Users)
                             {
-                                if (participant.hasSameNameAs(selectedUser.Name))
+                                if (participant.HasSameNameAs(selectedUser.Name))
                                 {
                                     return false;
                                 }

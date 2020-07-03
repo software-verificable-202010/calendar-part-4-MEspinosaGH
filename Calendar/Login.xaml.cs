@@ -43,7 +43,7 @@ namespace Calendar
             bool isInList = false;
             foreach(User oldUser in users.Users)
             {
-                if (oldUser.hasSameNameAs(textBoxUserName.Text))
+                if (oldUser.HasSameNameAs(textBoxUserName.Text))
                 {
                     isInList = true;
                     user = oldUser;

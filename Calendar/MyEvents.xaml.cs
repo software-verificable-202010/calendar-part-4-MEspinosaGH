@@ -57,7 +57,7 @@ namespace Calendar
             myEvents.Appointments.Clear();
             foreach(Appointment appointment in calendar.Appointments)
             {
-                if (appointment.Owner.hasSameNameAs(user.Name))
+                if (appointment.Owner.HasSameNameAs(user.Name))
                 {
                     myEvents.AddAppointment(appointment);
                 }
@@ -120,7 +120,7 @@ namespace Calendar
             {
                 MessageBox.Show(timeWarning);
             }
-            else if (eventToEdit.Participants.areAvailable(date, start, end, calendar) == false)
+            else if (eventToEdit.Participants.AreAvailable(date, start, end, calendar) == false)
             {
                 MessageBox.Show(userWarning);
             }

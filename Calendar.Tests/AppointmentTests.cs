@@ -29,7 +29,7 @@ namespace Calendar.Tests
             appointment = new Appointment("evento", "descripcion", DateTime.Today, start, end, user, participants);
             month = DateTime.Now.Month;
             year = DateTime.Now.Year;
-            Assert.IsTrue(appointment.isThisMonth(month, year));
+            Assert.IsTrue(appointment.IsThisMonth(month, year));
         }
 
         [Test]
@@ -43,7 +43,7 @@ namespace Calendar.Tests
             day = DateTime.Now.Day;
             month = DateTime.Now.Month;
             year = DateTime.Now.Year;
-            Assert.IsTrue(appointment.isThisDay(day, month, year));
+            Assert.IsTrue(appointment.IsThisDay(day, month, year));
         }
 
         [Test]

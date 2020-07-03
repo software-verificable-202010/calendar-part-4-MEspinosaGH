@@ -27,7 +27,7 @@ namespace Calendar
             this.name = name;
         }
 
-        public bool hasSameNameAs(string otherUserName)
+        public bool HasSameNameAs(string otherUserName)
         {
             if (otherUserName == null)
             {
@@ -40,14 +40,14 @@ namespace Calendar
             return false;
         }
 
-        public bool participatesInEvent(Appointment appointment)
+        public bool ParticipatesInEvent(Appointment appointment)
         {
             if (appointment == null)
             {
                 throw new ArgumentNullException(nameof(appointment));
             }
 
-            if (appointment.Owner.hasSameNameAs(name))
+            if (appointment.Owner.HasSameNameAs(name))
             {
                 return true;
             }
@@ -56,7 +56,7 @@ namespace Calendar
             {
                 foreach (User participant in appointment.Participants.Users)
                 {
-                    if (participant.hasSameNameAs(name))
+                    if (participant.HasSameNameAs(name))
                     {
                         return true;
                     }

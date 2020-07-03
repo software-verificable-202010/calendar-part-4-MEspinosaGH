@@ -11,7 +11,6 @@ namespace Calendar.Tests
     public class UtilsTests
     {
         #region Fields
-        private AppointmentsList eventList;
         private UsersList users;
         private Appointment oldEvent;
         private string[] oldStart, oldEnd;
@@ -25,12 +24,6 @@ namespace Calendar.Tests
         #endregion
 
         #region Methods
-        [Test]
-        public void Read_Events_Serial_File_Returns_EventList()
-        {
-            eventList = new AppointmentsList();
-            Assert.AreEqual(eventList.GetType(), Utils.ReadEventsSerialFile().GetType());
-        }
 
         [Test]
         public void Write_Events_Serial_File_Returns_True()

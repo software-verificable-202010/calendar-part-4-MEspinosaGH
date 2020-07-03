@@ -83,7 +83,7 @@ namespace Calendar
             {
                 MessageBox.Show(timeWarning);
             }
-            else if (selectedUsers.areAvailable(date, start, end, calendar) == false)
+            else if (selectedUsers.AreAvailable(date, start, end, calendar) == false)
             {
                 MessageBox.Show(userWarning);
             }

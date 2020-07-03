@@ -83,12 +83,12 @@ namespace Calendar
         public void SetEnd(string[] value)
         { end = value; }
 
-        public bool isThisMonth(int month, int year)
+        public bool IsThisMonth(int month, int year)
         {
             return date.Month == month && date.Year == year;
         }
 
-        public bool isThisDay(int day, int month, int year)
+        public bool IsThisDay(int day, int month, int year)
         {
             return date.Day == day && date.Month == month && date.Year == year;
         }

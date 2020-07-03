@@ -60,7 +60,7 @@ namespace Calendar.Tests
             events.AddAppointment(appointment1);
             events.AddAppointment(appointment2);
 
-            Assert.IsFalse(users.areAvailable(DateTime.Today, start, end, events));
+            Assert.IsFalse(users.AreAvailable(DateTime.Today, start, end, events));
         }
         #endregion
     }
