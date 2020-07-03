@@ -26,6 +26,44 @@ namespace Calendar
         {
             this.name = name;
         }
+
+        public bool hasSameNameAs(string otherUserName)
+        {
+            if (otherUserName == null)
+            {
+                throw new ArgumentNullException(nameof(otherUserName));
+            }
+            if (name == otherUserName)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public bool participatesInEvent(Appointment appointment)
+        {
+            if (appointment == null)
+            {
+                throw new ArgumentNullException(nameof(appointment));
+            }
+
+            if (appointment.Owner.hasSameNameAs(name))
+            {
+                return true;
+            }
+
+            if (appointment.Participants != null)
+            {
+                foreach (User participant in appointment.Participants.Users)
+                {
+                    if (participant.hasSameNameAs(name))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
         #endregion
     }
 }

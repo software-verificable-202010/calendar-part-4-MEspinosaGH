@@ -27,77 +27,34 @@ namespace Calendar
         #region Constants
         private const string timeWarning = "Pon una hora de término mayor a la de inicio";
         private const string userWarning = "Uno de los usuarios está ocupado a esa hora";
-        private const int minutesInAnHour = 60;
-        private const int hourIndex = 0;
-        private const int minuteIndex = 0;
+        private const string eventsFile = "Events.txt";
         #endregion
 
         #region Fields
-        private EventsList calendar = new EventsList();
+        private AppointmentsList calendar = new AppointmentsList();
         private User user;
         private UsersList allUsers;
         private UsersList selectedUsers = new UsersList();
         #endregion
 
         #region Methods
+        public NewEvent(User passedUser)
+        {
+            calendar = Utils.ReadEventsSerialFile();
+            allUsers = Utils.ReadUsersSerialFile();
+            user = passedUser;
+
+            InitializeComponent();
+            SetListBoxItems();
+            DatePickerEventDate.SelectedDate = DateTime.Today;
+
+            ButtonCancel.Click += new RoutedEventHandler(CancelBtn_Click);
+            ButtonSave.Click += new RoutedEventHandler(SaveBtn_Click);
+        }
+
         private void SetListBoxItems()
         {
             listBoxAllUsers.ItemsSource = allUsers.Users;
-        }
-
-        private bool DatesCollide(Event oldEvent, DateTime newEventDate, string[] newEventStart, string[] newEventEnd)
-        {
-            bool areDifferentDates = oldEvent.Date != newEventDate;
-            int oldEventStartTime = Int32.Parse(oldEvent.Start[hourIndex], NumberFormatInfo.InvariantInfo) + Int32.Parse(oldEvent.Start[minuteIndex], NumberFormatInfo.InvariantInfo) * minutesInAnHour;
-            int oldEventEndTIme = Int32.Parse(oldEvent.End[hourIndex], NumberFormatInfo.InvariantInfo) + Int32.Parse(oldEvent.End[minuteIndex], NumberFormatInfo.InvariantInfo) * minutesInAnHour;
-            int newEventStartTime = Int32.Parse(newEventStart[hourIndex], NumberFormatInfo.InvariantInfo) + Int32.Parse(newEventStart[minuteIndex], NumberFormatInfo.InvariantInfo) * minutesInAnHour;
-            int newEventEndTime = Int32.Parse(newEventEnd[hourIndex], NumberFormatInfo.InvariantInfo) + Int32.Parse(newEventEnd[minuteIndex], NumberFormatInfo.InvariantInfo) * minutesInAnHour;
-            bool areAtDifferentHours = oldEventStartTime >= newEventEndTime || newEventStartTime >= oldEventEndTIme;
-            if (areDifferentDates || areAtDifferentHours)
-            {
-                return false;
-            }
-            return true;
-        }
-
-        private bool UsersAreAvailable(DateTime date, string[] start, string[] end)
-        {
-            if (listBoxAllUsers.SelectedItems == null)
-            {
-                return true;
-            }
-            foreach (Event appointment in calendar.Events)
-            {
-                if (DatesCollide(appointment, date, start, end))
-                {
-                    foreach (User selectedUser in selectedUsers.Users)
-                    {
-                        if (appointment.Owner.Equals(selectedUser))
-                        {
-                            return false;
-                        }
-                        if (appointment.Participants != null)
-                        {
-                            foreach (User participant in appointment.Participants.Users)
-                            {
-                                if (participant.Name == selectedUser.Name)
-                                {
-                                    return false;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            return true;
-        }
-
-        private void saveSelectedUsers()
-        {
-            foreach (User item in listBoxAllUsers.SelectedItems)
-            {
-                selectedUsers.Users.Add(item);
-            }
         }
 
         private void CancelBtn_Click(Object sender, EventArgs e)
@@ -107,7 +64,7 @@ namespace Calendar
 
         private void SaveBtn_Click(Object sender, EventArgs e)
         {
-            saveSelectedUsers();
+            SaveSelectedUsers();
             string name = TextBoxName.Text;
             string description = TextBoxDescription.Text;
             DateTime date = DatePickerEventDate.SelectedDate.Value.Date;
@@ -126,35 +83,27 @@ namespace Calendar
             {
                 MessageBox.Show(timeWarning);
             }
-            else if (UsersAreAvailable(date, start, end) == false)
+            else if (selectedUsers.areAvailable(date, start, end, calendar) == false)
             {
                 MessageBox.Show(userWarning);
             }
             else
             {
-                Event newEvent = new Event(name, description, date, start, end, user, selectedUsers);
-                calendar.Events.Add(newEvent);
-                IFormatter formatter = new BinaryFormatter();
-                Stream stream = new FileStream("Events.txt", FileMode.Create, FileAccess.Write);
-                formatter.Serialize(stream, calendar);
-                stream.Close();
-                this.Close();
+                Appointment newAppointment = new Appointment(name, description, date, start, end, user, selectedUsers);
+                calendar.AddAppointment(newAppointment);
+                if (Utils.WriteEventsSerialFile(calendar, eventsFile))
+                {
+                    this.Close();
+                }
+
             }
         }
-
-        public NewEvent(User passedUser)
+        private void SaveSelectedUsers()
         {
-            Utils util = new Utils();
-            calendar = util.ReadEventsSerialFile();
-            allUsers = util.ReadUsersSerialFile();
-            user = passedUser;
-
-            InitializeComponent();
-            SetListBoxItems();
-            DatePickerEventDate.SelectedDate = DateTime.Today;
-
-            ButtonCancel.Click += new RoutedEventHandler(CancelBtn_Click);
-            ButtonSave.Click += new RoutedEventHandler(SaveBtn_Click);
+            foreach (User item in listBoxAllUsers.SelectedItems)
+            {
+                selectedUsers.AddUser(item);
+            }
         }
         #endregion
 

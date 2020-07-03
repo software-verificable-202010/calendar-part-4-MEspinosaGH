@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Calendar
 {
     [Serializable]
-    class UsersList
+    public class UsersList
     {
         #region Fields
         private List<User> users;
@@ -17,7 +17,6 @@ namespace Calendar
         public List<User> Users
         {
             get { return users; }
-            set { users = value; }
         }
         #endregion
 
@@ -25,6 +24,48 @@ namespace Calendar
         public UsersList()
         {
             users = new List<User>();
+        }
+
+        public void AddUser(User user)
+        {
+            Users.Add(user);
+        }
+
+        public void ClearUsers()
+        {
+            Users.Clear();
+        }
+
+        public bool areAvailable(DateTime date, string[] start, string[] end, AppointmentsList calendar)
+        {
+            if (calendar == null)
+            {
+                return true;
+            }
+            foreach (Appointment appointment in calendar.Appointments)
+            {
+                if (Utils.DatesCollide(appointment, date, start, end))
+                {
+                    foreach (User selectedUser in users)
+                    {
+                        if (appointment.Owner.hasSameNameAs(selectedUser.Name))
+                        {
+                            return false;
+                        }
+                        if (appointment.Participants != null)
+                        {
+                            foreach (User participant in appointment.Participants.Users)
+                            {
+                                if (participant.hasSameNameAs(selectedUser.Name))
+                                {
+                                    return false;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return true;
         }
         #endregion
     }

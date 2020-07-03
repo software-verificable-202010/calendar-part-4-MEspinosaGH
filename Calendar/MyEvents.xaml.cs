@@ -28,121 +28,75 @@ namespace Calendar
         private const int minuteIndex = 1;
         private const string timeWarning = "Pon una hora de término mayor a la de inicio";
         private const string userWarning = "Uno de los usuarios está ocupado a esa hora";
-        private const int minutesInAnHour = 60;
+        private const string eventsFile = "Events.txt";
         #endregion
 
         #region Fields
-        private Utils util = new Utils();
-        private EventsList calendar;
-        private EventsList myEvents = new EventsList();
+        private AppointmentsList calendar;
+        private AppointmentsList myEvents = new AppointmentsList();
         private User user;
-        private Event selectedEvent;
+        private Appointment selectedEvent;
         private UsersList allUsers;
         #endregion
 
         #region Methods
+        public MyEvents(User passedUser)
+        {
+            InitializeComponent();
+            ButtonDelete.IsEnabled = false;
+            calendar = Utils.ReadEventsSerialFile();
+            allUsers = Utils.ReadUsersSerialFile();
+            user = passedUser;
+            FilterCalendar();
+            AddEventsToListBox();
+            listBoxAllUsers.ItemsSource = allUsers.Users;
+        }
+
         private void FilterCalendar()
         {
-            myEvents.Events.Clear();
-            foreach(Event appointment in calendar.Events)
+            myEvents.Appointments.Clear();
+            foreach(Appointment appointment in calendar.Appointments)
             {
-                if (appointment.Owner.Name == user.Name)
+                if (appointment.Owner.hasSameNameAs(user.Name))
                 {
-                    myEvents.Events.Add(appointment);
+                    myEvents.AddAppointment(appointment);
                 }
             }
         }
 
         private void AddEventsToListBox()
         {
-            listBoxEvents.ItemsSource = myEvents.Events;
+            listBoxEvents.ItemsSource = myEvents.Appointments;
         }
 
+        private void ListBoxEvents_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            int selectedIndex = listBoxEvents.SelectedIndex;
+            selectedEvent = listBoxEvents.Items[selectedIndex] as Appointment;
+            ButtonDelete.IsEnabled = true;
+            SetEventValues();
+        }
         private void SetEventValues()
         {
             TextBoxName.Text = selectedEvent.Name;
             TextBoxDescription.Text = selectedEvent.Description;
             DatePickerEventDate.SelectedDate = selectedEvent.Date;
-            ComboBoxStartTimeHour.SelectedItem = ComboBoxStartTimeHour.Items[Int32.Parse(selectedEvent.Start[hourIndex], NumberFormatInfo.InvariantInfo)];
-            ComboBoxStartTimeMinute.SelectedItem = ComboBoxStartTimeMinute.Items[Int32.Parse(selectedEvent.Start[minuteIndex], NumberFormatInfo.InvariantInfo)];
-            ComboBoxFinishTimeHour.SelectedItem = ComboBoxFinishTimeHour.Items[Int32.Parse(selectedEvent.End[hourIndex], NumberFormatInfo.InvariantInfo)];
-            ComboBoxFinishTimeMinute.SelectedItem = ComboBoxFinishTimeMinute.Items[Int32.Parse(selectedEvent.End[minuteIndex], NumberFormatInfo.InvariantInfo)];
-        }
-
-        private void CloseWindow()
-        {
-            IFormatter formatter = new BinaryFormatter();
-            Stream stream = new FileStream("Events.txt", FileMode.Create, FileAccess.Write);
-            formatter.Serialize(stream, calendar);
-            stream.Close();
-            this.Close();
-        }
-
-        private bool DatesCollide(Event oldEvent, DateTime newEventDate, string[] newEventStart, string[] newEventEnd)
-        {
-            bool areDifferentDates = oldEvent.Date != newEventDate;
-            int oldEventStartTime = Int32.Parse(oldEvent.Start[hourIndex], NumberFormatInfo.InvariantInfo) + Int32.Parse(oldEvent.Start[minuteIndex], NumberFormatInfo.InvariantInfo) * minutesInAnHour;
-            int oldEventEndTIme = Int32.Parse(oldEvent.End[hourIndex], NumberFormatInfo.InvariantInfo) + Int32.Parse(oldEvent.End[minuteIndex], NumberFormatInfo.InvariantInfo) * minutesInAnHour;
-            int newEventStartTime = Int32.Parse(newEventStart[hourIndex], NumberFormatInfo.InvariantInfo) + Int32.Parse(newEventStart[minuteIndex], NumberFormatInfo.InvariantInfo) * minutesInAnHour;
-            int newEventEndTime = Int32.Parse(newEventEnd[hourIndex], NumberFormatInfo.InvariantInfo) + Int32.Parse(newEventEnd[minuteIndex], NumberFormatInfo.InvariantInfo) * minutesInAnHour;
-            bool areAtDifferentHours = oldEventStartTime >= newEventEndTime || newEventStartTime >= oldEventEndTIme;
-            if (areDifferentDates || areAtDifferentHours)
-            {
-                return false;
-            }
-            return true;
-        }
-
-        private bool UsersAreAvailable(DateTime date, string[] start, string[] end, UsersList selectedUsers)
-        {
-            if (listBoxAllUsers.SelectedItems == null)
-            {
-                return true;
-            }
-            foreach (Event appointment in calendar.Events)
-            {
-                if (DatesCollide(appointment, date, start, end))
-                {
-                    foreach (User selectedUser in selectedUsers.Users)
-                    {
-                        if (appointment.Owner.Equals(selectedUser))
-                        {
-                            return false;
-                        }
-                        if (appointment.Participants != null)
-                        {
-                            foreach (User participant in appointment.Participants.Users)
-                            {
-                                if (participant.Name == selectedUser.Name)
-                                {
-                                    return false;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            return true;
-        }
-
-        private void listBoxEvents_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            int selectedIndex = listBoxEvents.SelectedIndex;
-            selectedEvent = listBoxEvents.Items[selectedIndex] as Event;
-            ButtonDelete.IsEnabled = true;
-            SetEventValues();
+            ComboBoxStartTimeHour.SelectedItem = ComboBoxStartTimeHour.Items[Int32.Parse(selectedEvent.GetStart()[hourIndex], NumberFormatInfo.InvariantInfo)];
+            ComboBoxStartTimeMinute.SelectedItem = ComboBoxStartTimeMinute.Items[Int32.Parse(selectedEvent.GetStart()[minuteIndex], NumberFormatInfo.InvariantInfo)];
+            ComboBoxFinishTimeHour.SelectedItem = ComboBoxFinishTimeHour.Items[Int32.Parse(selectedEvent.GetEnd()[hourIndex], NumberFormatInfo.InvariantInfo)];
+            ComboBoxFinishTimeMinute.SelectedItem = ComboBoxFinishTimeMinute.Items[Int32.Parse(selectedEvent.GetEnd()[minuteIndex], NumberFormatInfo.InvariantInfo)];
         }
 
         private void ButtonDelete_Click(object sender, RoutedEventArgs e)
         {
-            Event eventToRemove = calendar.Events.Single(appointment => appointment.Equals(selectedEvent));
-            calendar.Events.Remove(eventToRemove);
+            Appointment eventToRemove = calendar.Appointments.Single(appointment => appointment.Equals(selectedEvent));
+            calendar.RemoveAppointment(eventToRemove);
             CloseWindow();
         }
 
         private void ButtonSave_Click(object sender, RoutedEventArgs e)
         {
-            Event eventToEdit = calendar.Events.Single(appointment => appointment.Equals(selectedEvent));
+            Appointment eventToEdit = calendar.Appointments.Single(appointment => appointment.Equals(selectedEvent));
             string startHour = ComboBoxStartTimeHour.Text.ToString();
             string startMinute = ComboBoxStartTimeMinute.Text.ToString();
             string endHour = ComboBoxFinishTimeHour.Text;
@@ -151,11 +105,11 @@ namespace Calendar
             string[] end = { endHour, endMinute };
             if (eventToEdit.Participants != null)
             {
-                eventToEdit.Participants.Users.Clear();
+                eventToEdit.Participants.ClearUsers();
             }
             foreach (User item in listBoxAllUsers.SelectedItems)
             {
-                eventToEdit.Participants.Users.Add(item);
+                eventToEdit.Participants.AddUser(item);
             }
             DateTime date = DatePickerEventDate.SelectedDate.Value.Date;
             bool isNotValid = int.Parse(endHour,
@@ -166,31 +120,23 @@ namespace Calendar
             {
                 MessageBox.Show(timeWarning);
             }
-            else if (UsersAreAvailable(date, start, end, eventToEdit.Participants) == false)
+            else if (eventToEdit.Participants.areAvailable(date, start, end, calendar) == false)
             {
                 MessageBox.Show(userWarning);
             }
             else
             {
-                eventToEdit.Name = TextBoxName.Text;
-                eventToEdit.Description = TextBoxDescription.Text;
-                eventToEdit.Date = date;
-                eventToEdit.Start = start;
-                eventToEdit.End = end;
+                eventToEdit.Edit(TextBoxName.Text, TextBoxDescription.Text, date, start, end);
                 CloseWindow();
             }
         }
 
-        public MyEvents(User passedUser)
+        private void CloseWindow()
         {
-            InitializeComponent();
-            ButtonDelete.IsEnabled = false;
-            calendar = util.ReadEventsSerialFile();
-            allUsers = util.ReadUsersSerialFile();
-            user = passedUser;
-            FilterCalendar();
-            AddEventsToListBox();
-            listBoxAllUsers.ItemsSource = allUsers.Users;
+            if (Utils.WriteEventsSerialFile(calendar, eventsFile))
+            {
+                this.Close();
+            }
         }
         #endregion
     }

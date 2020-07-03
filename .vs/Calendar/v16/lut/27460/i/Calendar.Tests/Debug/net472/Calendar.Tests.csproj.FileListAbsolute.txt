@@ -1,0 +1,10 @@
+C:\Users\macae\source\repos\Calendar\.vs\Calendar\v16\lut\0\b\Calendar.Tests\Debug\net472\NUnit3.TestAdapter.dll
+C:\Users\macae\source\repos\Calendar\.vs\Calendar\v16\lut\0\b\Calendar.Tests\Debug\net472\NUnit3.TestAdapter.pdb
+C:\Users\macae\source\repos\Calendar\.vs\Calendar\v16\lut\0\b\Calendar.Tests\Debug\net472\nunit.engine.dll
+C:\Users\macae\source\repos\Calendar\.vs\Calendar\v16\lut\0\b\Calendar.Tests\Debug\net472\nunit.engine.api.dll
+C:\Users\macae\source\repos\Calendar\.vs\Calendar\v16\lut\0\b\Calendar.Tests\Debug\net472\Calendar.Tests.dll
+C:\Users\macae\source\repos\Calendar\.vs\Calendar\v16\lut\0\i\Calendar.Tests\Debug\net472\Calendar.Tests.csprojAssemblyReference.cache
+C:\Users\macae\source\repos\Calendar\.vs\Calendar\v16\lut\0\i\Calendar.Tests\Debug\net472\Calendar.Tests.AssemblyInfoInputs.cache
+C:\Users\macae\source\repos\Calendar\.vs\Calendar\v16\lut\0\i\Calendar.Tests\Debug\net472\Calendar.Tests.AssemblyInfo.cs
+C:\Users\macae\source\repos\Calendar\.vs\Calendar\v16\lut\0\i\Calendar.Tests\Debug\net472\Calendar.Tests.csproj.CopyComplete
+C:\Users\macae\source\repos\Calendar\.vs\Calendar\v16\lut\0\i\Calendar.Tests\Debug\net472\Calendar.Tests.dll

@@ -22,20 +22,28 @@ namespace Calendar
     /// </summary>
     public partial class Login : Window
     {
+        #region Constants
+        private const string usersFile = "Users.txt";
+        #endregion
+
         #region Fields
-        private Utils util = new Utils();
-        private UsersList users = new UsersList();
+        private readonly UsersList users = new UsersList();
         private User user;
         #endregion
 
         #region Methods
+        public Login()
+        {
+            InitializeComponent();
+            buttonAccept.Click += new RoutedEventHandler(AcceptBtn_Click);
+            users = Utils.ReadUsersSerialFile();
+        }
         private void AcceptBtn_Click(Object sender, EventArgs e)
         {
             bool isInList = false;
             foreach(User oldUser in users.Users)
             {
-                Console.WriteLine(oldUser.Name);
-                if (oldUser.Name == textBoxUserName.Text)
+                if (oldUser.hasSameNameAs(textBoxUserName.Text))
                 {
                     isInList = true;
                     user = oldUser;
@@ -44,26 +52,18 @@ namespace Calendar
             if (isInList == false)
             {
                 user = new User(textBoxUserName.Text);
-                users.Users.Add(user);
+                users.AddUser(user);
             }
-            IFormatter formatter = new BinaryFormatter();
-            Stream stream = new FileStream("Users.txt", FileMode.Create, FileAccess.Write);
-            formatter.Serialize(stream, users);
-            stream.Close();
+            if (Utils.WriteUsersSerialFile(users, usersFile))
+            {
+                int month = DateTime.Now.Month;
+                int year = DateTime.Now.Year;
+                MainWindow window = new MainWindow(month, year, user);
+                window.Show();
 
-            int month = DateTime.Now.Month;
-            int year = DateTime.Now.Year;
-            MainWindow window = new MainWindow(month, year, user);
-            window.Show();
+                this.Close();
+            }
 
-            this.Close();
-        }
-
-        public Login()
-        {
-            InitializeComponent();
-            buttonAccept.Click += new RoutedEventHandler(AcceptBtn_Click);
-            users = util.ReadUsersSerialFile();
         }
         #endregion
     }

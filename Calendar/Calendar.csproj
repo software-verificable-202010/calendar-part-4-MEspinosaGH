@@ -72,8 +72,8 @@
     <Compile Include="User.cs" />
     <Compile Include="UsersList.cs" />
     <Compile Include="Utils.cs" />
-    <Compile Include="EventsList.cs" />
-    <Compile Include="Event.cs" />
+    <Compile Include="AppointmentsList.cs" />
+    <Compile Include="Appointment.cs" />
     <Compile Include="NewEvent.xaml.cs">
       <DependentUpon>NewEvent.xaml</DependentUpon>
     </Compile>
